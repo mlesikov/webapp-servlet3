@@ -6,12 +6,6 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
 
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
@@ -28,18 +22,16 @@ public class Jetty {
     ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
     context.setContextPath("/");
     context.addEventListener(new ServletContextListener() {
-
       public void contextInitialized(ServletContextEvent servletContextEvent) {
         ServletContext servletContext = servletContextEvent.getServletContext();
 
-        servletContext.addServlet("test", new HttpServlet() {
-          @Override
-          protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-            PrintWriter writer = resp.getWriter();
-            writer.println("Hello!");
-            writer.flush();
-          }
-        }).addMapping("/test");
+        servletContext.addFilter("/*", new SecurityFilter("/login", "MYSESSIONID"));
+        servletContext.addServlet("LoginPageController", new LoginPageView()).addMapping("/login");
+
+        servletContext.addServlet("MainPageController", new MainPageController()).addMapping("/main");
+        servletContext.addServlet("MainPageView", new MainPageView()).addMapping("/mainPageView");
+
+        servletContext.addServlet("TransactionsPageController", new TransactionsPageController()).addMapping("/transactions");
       }
 
       public void contextDestroyed(ServletContextEvent servletContextEvent) {
@@ -54,4 +46,5 @@ public class Jetty {
       e.printStackTrace();
     }
   }
+
 }
