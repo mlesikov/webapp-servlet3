@@ -1,17 +1,17 @@
 package com.clouway;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.servlet.GuiceFilter;
+import com.google.inject.servlet.GuiceServletContextListener;
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
+import javax.servlet.DispatcherType;
+import java.util.EnumSet;
 
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
@@ -27,31 +27,28 @@ public class Jetty {
   public void start() {
     ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
     context.setContextPath("/");
-    context.addEventListener(new ServletContextListener() {
 
-      public void contextInitialized(ServletContextEvent servletContextEvent) {
-        ServletContext servletContext = servletContextEvent.getServletContext();
-
-        servletContext.addServlet("test", new HttpServlet() {
-          @Override
-          protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-            PrintWriter writer = resp.getWriter();
-            writer.println("Hello!");
-            writer.flush();
-          }
-        }).addMapping("/test");
-      }
-
-      public void contextDestroyed(ServletContextEvent servletContextEvent) {
-
+    /*
+     * Guice Servlet Handler
+     */
+    context.addServlet(DefaultServlet.class, "/");
+    context.addFilter(GuiceFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST, DispatcherType.INCLUDE));
+    context.addEventListener(new GuiceServletContextListener() {
+      @Override
+      protected Injector getInjector() {
+        return Guice.createInjector(new AppModule());
       }
     });
 
-    server.setHandler(context);
+    HandlerList handlers = new HandlerList();
+    handlers.setHandlers(new Handler[]{context});
+
+    server.setHandler(handlers);
     try {
       server.start();
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
+
 }
