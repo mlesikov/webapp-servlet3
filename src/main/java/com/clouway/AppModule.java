@@ -1,18 +1,15 @@
 package com.clouway;
 
-import com.clouway.adapter.http.UserService;
-import com.clouway.adapter.memory.InMemoryUserRepository;
-import com.clouway.core.UserRepository;
-import com.google.inject.Singleton;
-import com.google.sitebricks.SitebricksModule;
+import com.clouway.adapter.http.HttpModule;
+import com.google.inject.AbstractModule;
 
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
  */
-class AppModule extends SitebricksModule {
+class AppModule extends AbstractModule{
+
   @Override
-  protected void configureSitebricks() {
-    bind(UserRepository.class).to(InMemoryUserRepository.class).in(Singleton.class);
-    at("/users").serve(UserService.class);
+  protected void configure() {
+    install(new HttpModule());
   }
 }

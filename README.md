@@ -13,3 +13,8 @@ Then run the app:
 ```sh
 java -jar build/libs/webapp-all.jar
 ```
+
+Test the app :
+```
+http://localhost:8080/_status
+```
