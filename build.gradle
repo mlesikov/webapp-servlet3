@@ -30,7 +30,7 @@ jar {
 }
 
 shadowJar {
-  baseName = 'webbap3'
+  baseName = 'webapp'
   exclude 'META-INF/*.DSA'
   exclude 'META-INF/*.RSA'
 }
