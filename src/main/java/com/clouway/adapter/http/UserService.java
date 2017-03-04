@@ -1,6 +1,6 @@
 package com.clouway.adapter.http;
 
-import com.clouway.UserAlreadyExistsException;
+import com.clouway.core.UserAlreadyExistsException;
 import com.clouway.core.User;
 import com.clouway.core.UserRepository;
 import com.google.common.collect.Multimap;

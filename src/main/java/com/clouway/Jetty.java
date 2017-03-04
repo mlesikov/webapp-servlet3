@@ -51,4 +51,8 @@ public class Jetty {
     }
   }
 
+  public void stop() throws Exception {
+    server.stop();
+  }
+
 }

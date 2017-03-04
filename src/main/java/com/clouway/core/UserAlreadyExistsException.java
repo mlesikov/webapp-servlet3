@@ -1,4 +1,4 @@
-package com.clouway;
+package com.clouway.core;
 
 /**
  * @author Miroslav Genov (miroslav.genov@clouway.com)
