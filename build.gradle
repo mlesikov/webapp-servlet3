@@ -1,5 +1,17 @@
+buildscript {
+  repositories {
+    mavenCentral()
+    jcenter()
+  }
+
+  dependencies {
+    classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
+
+  }
+}
 
 apply plugin: 'java'
+apply plugin: 'com.github.johnrengelman.shadow'
 
 allprojects {
   apply plugin: 'java'
@@ -15,6 +27,12 @@ jar {
   manifest {
     attributes 'Main-Class': 'com.clouway.App'
   }
+}
+
+shadowJar {
+  baseName = 'webbap3'
+  exclude 'META-INF/*.DSA'
+  exclude 'META-INF/*.RSA'
 }
 
 dependencies {
